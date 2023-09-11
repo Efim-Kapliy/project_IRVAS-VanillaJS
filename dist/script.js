@@ -1,6 +1,32 @@
 /******/ (function() { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./src/js/modules/calcEmptyScroll.js":
+/*!*******************************************!*\
+  !*** ./src/js/modules/calcEmptyScroll.js ***!
+  \*******************************************/
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+const calcEmptyScroll = () => {
+  let div = document.createElement("div");
+  div.style.width = "50px";
+  div.style.height = "50px";
+  div.style.overflowY = "scroll";
+  div.style.visibility = "hidden";
+  document.body.appendChild(div);
+  let scrollWidth = div.offsetWidth - div.clientWidth;
+  console.log(`Общая ширина: ${div.offsetWidth}`);
+  console.log(`Ширина без скрола: ${div.clientWidth}`);
+  console.log(`Новое св-во: ${div.innerWidth}`);
+  div.remove();
+  return scrollWidth;
+};
+/* harmony default export */ __webpack_exports__["default"] = (calcEmptyScroll);
+
+/***/ }),
+
 /***/ "./src/js/modules/changeModalState.js":
 /*!********************************************!*\
   !*** ./src/js/modules/changeModalState.js ***!
@@ -156,10 +182,13 @@ const forms = state => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _calcEmptyScroll__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./calcEmptyScroll */ "./src/js/modules/calcEmptyScroll.js");
+
 const images = () => {
   const imgPopup = document.createElement("div"),
     workSection = document.querySelector(".works"),
-    bigImage = document.createElement("img");
+    bigImage = document.createElement("img"),
+    scroll = (0,_calcEmptyScroll__WEBPACK_IMPORTED_MODULE_0__["default"])();
   imgPopup.classList.add("popup");
   workSection.appendChild(imgPopup);
   imgPopup.style.justifyContent = "center";
@@ -170,6 +199,7 @@ const images = () => {
     e.preventDefault();
     let target = e.target;
     if (target && target.classList.contains("preview")) {
+      document.body.style.marginRight = `${scroll}px`;
       imgPopup.style.display = "flex";
       document.body.style.overflow = "hidden";
       bigImage.style.height = "50dvh";
@@ -177,16 +207,19 @@ const images = () => {
       bigImage.setAttribute("src", path);
     }
     if (target && target.matches("div.popup")) {
-      imgPopup.style.display = "none";
-      document.body.style.overflow = "";
+      closePopupImage();
     }
   });
   workSection.addEventListener("keydown", e => {
     if (e.code === "Escape" && imgPopup.style.display !== "none") {
-      imgPopup.style.display = "none";
-      document.body.style.overflow = "";
+      closePopupImage();
     }
   });
+  function closePopupImage() {
+    imgPopup.style.display = "none";
+    document.body.style.overflow = "";
+    document.body.style.marginRight = `0px`;
+  }
 };
 /* harmony default export */ __webpack_exports__["default"] = (images);
 
@@ -200,13 +233,16 @@ const images = () => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _calcEmptyScroll__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./calcEmptyScroll */ "./src/js/modules/calcEmptyScroll.js");
+
 const modals = () => {
   function bindModal(triggerSelector, modalSelector, closeSelector) {
     let closeClickOverlay = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : true;
     const trigger = document.querySelectorAll(triggerSelector),
       modal = document.querySelector(modalSelector),
       close = document.querySelector(closeSelector),
-      windows = document.querySelectorAll("[data-modal]");
+      windows = document.querySelectorAll("[data-modal]"),
+      scroll = (0,_calcEmptyScroll__WEBPACK_IMPORTED_MODULE_0__["default"])();
     trigger.forEach(item => {
       item.addEventListener("click", e => {
         if (e.target) {
@@ -218,9 +254,9 @@ const modals = () => {
         modal.style.display = "block";
         document.body.style.overflow = "hidden";
         // document.body.classList.add("modal-open");
+        document.body.style.marginRight = `${scroll}px`;
       });
     });
-
     close.addEventListener("click", () => {
       closeModal(modal, windows);
     });
@@ -238,6 +274,7 @@ const modals = () => {
   function closeModal(modalClose, windowsClose) {
     windowsClose.forEach(item => {
       item.style.display = "none";
+      document.body.style.marginRight = `0px`;
     });
     modalClose.style.display = "none";
     document.body.style.overflow = "";
