@@ -280,11 +280,6 @@ const tabs = function (headerSelector, tabSelector, contentSelector, activeClass
       item.classList.add("animated", "fadeIn");
       item.style.display = "none";
     });
-    tab.forEach(item => {
-      item.classList.remove(activeClass);
-      item.classList.add("animated");
-      item.style.transitionDuration = ".4s";
-    });
   }
   function showTabContent() {
     let i = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
